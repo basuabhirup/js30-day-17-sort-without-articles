@@ -1,22 +1,15 @@
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
 const bandList = document.querySelector("#bands");
 
-const noArticles = bands.map((band, i) => {
-  if (band.split(" ")[0].toLowerCase() === "a" ||
-      band.split(" ")[0].toLowerCase() === "an" ||
-      band.split(" ")[0].toLowerCase() === "the") {
-    return band.split(" ").slice(1,).join(" ") + ` ${i}`;
-  } else {
-    return band + ` ${i}`;
-  }
-})
+function ignoreArticles(str) {
+  return str.split(" ")
+            .filter(word => {
+              return word.toLowerCase() !== "a"
+                  && word.toLowerCase() !== "an"
+                  && word.toLowerCase() !== "the";
+          }).join(" ");
+}
 
-const sorted = noArticles
-                .sort()
-                .map(item => {
-                  const originalIndex = item.split(" ")[item.split(" ").length - 1];
-                  bandList.innerHTML += `<li>${bands[originalIndex]}</li>`;
-                  return bands[originalIndex];
-                });
+bands.sort((band1, band2) => ignoreArticles(band1) < ignoreArticles(band2) ? -1: 1);
 
-console.log(sorted);
+bandList.innerHTML = bands.map(band => `<li>${band}</li>`).join("");
